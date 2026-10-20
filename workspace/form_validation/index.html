@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SecureForm - Real-time Validation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
+    body { background:#09090b; color:#fff; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+    .card { background:#18181b; border:1px solid #27272a; border-radius:24px; padding:32px; width:100%; max-width:420px; }
+    h1 { font-size:22px; color:#38bdf8; margin-bottom:20px; }
+    .field { margin-bottom:14px; }
+    label { display:block; font-size:12px; color:#94a3b8; margin-bottom:6px; font-weight:700; }
+    input { width:100%; background:#09090b; border:1px solid #3f3f46; border-radius:10px; padding:12px; color:#fff; font-size:13px; outline:none; }
+    .err { color:#f43f5e; font-size:11px; margin-top:4px; display:none; }
+    button { width:100%; background:#6366f1; border:none; padding:12px; border-radius:10px; color:#fff; font-weight:700; cursor:pointer; margin-top:10px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🛡️ SecureForm Validation</h1>
+    <form onsubmit="validate(event)">
+      <div class="field">
+        <label>Username (min 4 chars)</label>
+        <input type="text" id="user" oninput="checkUser()">
+        <div id="u-err" class="err">Must be at least 4 alphanumeric characters</div>
+      </div>
+      <div class="field">
+        <label>Email Address</label>
+        <input type="email" id="email" oninput="checkEmail()">
+        <div id="e-err" class="err">Please enter a valid email</div>
+      </div>
+      <div class="field">
+        <label>Password (min 8 chars, 1 number)</label>
+        <input type="password" id="pass" oninput="checkPass()">
+        <div id="p-err" class="err">Password must have 8+ chars and at least 1 digit</div>
+      </div>
+      <button type="submit">Submit Registration</button>
+    </form>
+  </div>
+  <script>
+    function checkUser() {
+      const v = document.getElementById('user').value.trim();
+      const err = document.getElementById('u-err');
+      err.style.display = (v.length >= 4) ? 'none' : 'block';
+    }
+    function checkEmail() {
+      const v = document.getElementById('email').value.trim();
+      const err = document.getElementById('e-err');
+      err.style.display = (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) ? 'none' : 'block';
+    }
+    function checkPass() {
+      const v = document.getElementById('pass').value;
+      const err = document.getElementById('p-err');
+      err.style.display = (v.length >= 8 && /\d/.test(v)) ? 'none' : 'block';
+    }
+    function validate(e) {
+      e.preventDefault();
+      checkUser(); checkEmail(); checkPass();
+      alert('Form validation passed successfully!');
+    }
+  </script>
+</body>
+</html>

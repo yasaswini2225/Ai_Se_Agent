@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CyberWeather Dashboard - DevPulse AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans', sans-serif; }
+    body { background: radial-gradient(circle at top, #1e1b4b, #09090b); color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .card { background: rgba(24,24,27,0.85); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 32px; width: 100%; max-width: 440px; box-shadow: 0 25px 50px rgba(0,0,0,0.7); }
+    .search-box { display: flex; gap: 8px; margin-bottom: 24px; }
+    input { flex: 1; background: #18181b; border: 1px solid #3f3f46; border-radius: 12px; padding: 12px 16px; color: #fff; font-size: 14px; outline: none; }
+    button { background: #6366f1; border: none; border-radius: 12px; padding: 12px 18px; color: white; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .weather-main { text-align: center; margin-bottom: 24px; }
+    .city { font-size: 26px; font-weight: 800; color: #f8fafc; }
+    .temp { font-size: 64px; font-weight: 800; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .condition { font-size: 16px; color: #94a3b8; margin-top: -6px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .metric { background: rgba(255,255,255,0.04); border-radius: 14px; padding: 14px; border: 1px solid rgba(255,255,255,0.06); }
+    .metric-title { font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; }
+    .metric-val { font-size: 18px; font-weight: 700; color: #cbd5e1; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="search-box">
+      <input type="text" id="cityInput" placeholder="Enter city (e.g. Tokyo, London, SF)" value="San Francisco">
+      <button onclick="fetchWeather()">Search</button>
+    </div>
+    <div class="weather-main">
+      <div id="city" class="city">San Francisco, US</div>
+      <div id="temp" class="temp">68°F</div>
+      <div id="cond" class="condition">☀️ Mostly Sunny</div>
+    </div>
+    <div class="grid">
+      <div class="metric"><div class="metric-title">Humidity</div><div id="humidity" class="metric-val">58%</div></div>
+      <div class="metric"><div class="metric-title">Wind Speed</div><div id="wind" class="metric-val">9 mph NW</div></div>
+      <div class="metric"><div class="metric-title">Air Quality</div><div class="metric-val">32 (Good)</div></div>
+      <div class="metric"><div class="metric-title">UV Index</div><div class="metric-val">4 Moderate</div></div>
+    </div>
+  </div>
+  <script>
+    const mockData = {
+      "tokyo": { temp: "22°C", cond: "🌸 Clear Skies", hum: "45%", wind: "6 km/h" },
+      "london": { temp: "14°C", cond: "🌧️ Light Rain", hum: "82%", wind: "18 km/h" },
+      "san francisco": { temp: "68°F", cond: "☀️ Mostly Sunny", hum: "58%", wind: "9 mph" },
+      "new york": { temp: "72°F", cond: "⛅ Partly Cloudy", hum: "50%", wind: "12 mph" }
+    };
+    function fetchWeather() {
+      const q = document.getElementById('cityInput').value.trim().toLowerCase();
+      const match = mockData[q] || { temp: "20°C", cond: "⛅ Clear & Breezy", hum: "55%", wind: "10 km/h" };
+      document.getElementById('city').textContent = document.getElementById('cityInput').value.toUpperCase();
+      document.getElementById('temp').textContent = match.temp;
+      document.getElementById('cond').textContent = match.cond;
+      document.getElementById('humidity').textContent = match.hum;
+      document.getElementById('wind').textContent = match.wind;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>KeyShield - Password Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&family=Plus+Jakarta+Sans:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
+    body { background: #0b0d13; color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .card { background: #161822; border: 1px solid #272a3b; border-radius: 20px; padding: 28px; width: 100%; max-width: 420px; }
+    h2 { font-size: 20px; margin-bottom: 20px; color: #38bdf8; }
+    .display-box { background: #0c0d14; border: 1px solid #272a3b; border-radius: 12px; padding: 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-family: 'JetBrains Mono', monospace; font-size: 16px; color: #10b981; }
+    .copy-btn { background: #3b82f6; border: none; padding: 6px 12px; border-radius: 8px; color: white; cursor: pointer; font-size: 12px; font-weight: 700; }
+    .option-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; font-size: 13px; color: #94a3b8; }
+    input[type=range] { width: 100%; accent-color: #38bdf8; margin: 10px 0; }
+    .gen-btn { width: 100%; background: linear-gradient(135deg, #6366f1, #3b82f6); border: none; padding: 14px; border-radius: 12px; color: white; font-weight: 700; font-size: 15px; cursor: pointer; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>🔐 KeyShield Generator</h2>
+    <div class="display-box">
+      <span id="pass">P@ssw0rd123!</span>
+      <button class="copy-btn" onclick="copyPass()">Copy</button>
+    </div>
+    <div class="option-row"><span>Length: <b id="len-val">16</b></span></div>
+    <input type="range" id="len" min="8" max="32" value="16" oninput="document.getElementById('len-val').textContent=this.value; generate()">
+    <div class="option-row"><span>Include Symbols (!@#$)</span><input type="checkbox" id="sym" checked onchange="generate()"></div>
+    <div class="option-row"><span>Include Numbers (0-9)</span><input type="checkbox" id="num" checked onchange="generate()"></div>
+    <div class="option-row"><span>Include Uppercase (A-Z)</span><input type="checkbox" id="upper" checked onchange="generate()"></div>
+    <button class="gen-btn" onclick="generate()">Generate Password</button>
+  </div>
+  <script>
+    function generate() {
+      const len = document.getElementById('len').value;
+      const sym = document.getElementById('sym').checked;
+      const num = document.getElementById('num').checked;
+      const upper = document.getElementById('upper').checked;
+      let chars = 'abcdefghijklmnopqrstuvwxyz';
+      if (upper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      if (num) chars += '0123456789';
+      if (sym) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+      let res = '';
+      for (let i = 0; i < len; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
+      document.getElementById('pass').textContent = res;
+    }
+    function copyPass() {
+      navigator.clipboard.writeText(document.getElementById('pass').textContent);
+      alert('Password copied to clipboard!');
+    }
+    generate();
+  </script>
+</body>
+</html>

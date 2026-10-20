@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PulseStaff - Employee Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
+    body { background:#09090b; color:#fff; min-height:100vh; padding:32px 20px; }
+    .container { max-width:900px; margin:0 auto; }
+    h1 { font-size:24px; color:#38bdf8; margin-bottom:20px; }
+    .form-row { display:flex; gap:10px; margin-bottom:20px; }
+    input, select { background:#18181b; border:1px solid #3f3f46; border-radius:10px; padding:12px; color:#fff; font-size:13px; outline:none; flex:1; }
+    button.btn { background:#6366f1; border:none; border-radius:10px; padding:12px 20px; color:#fff; font-weight:700; cursor:pointer; }
+    table { width:100%; border-collapse:collapse; background:#18181b; border-radius:16px; overflow:hidden; border:1px solid #27272a; }
+    th, td { padding:14px 18px; text-align:left; font-size:13px; border-bottom:1px solid #27272a; }
+    th { background:#1f1f23; color:#94a3b8; font-size:11px; text-transform:uppercase; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>💼 Employee Management System</h1>
+    <div class="form-row">
+      <input type="text" id="name" placeholder="Employee Name">
+      <select id="dept">
+        <option>Engineering</option><option>Product</option><option>Design</option><option>Operations</option>
+      </select>
+      <input type="text" id="role" placeholder="Role (e.g. Lead Architect)">
+      <button class="btn" onclick="addEmp()">Add Staff</button>
+    </div>
+    <table>
+      <thead><tr><th>Name</th><th>Department</th><th>Role</th><th>Status</th></tr></thead>
+      <tbody id="emps"></tbody>
+    </table>
+  </div>
+  <script>
+    let staff = [
+      { name: "Elena Rostova", dept: "Engineering", role: "AI Research Lead", status: "Active" },
+      { name: "David Chen", dept: "Product", role: "Principal PM", status: "Active" }
+    ];
+    function render() {
+      const b = document.getElementById('emps');
+      b.innerHTML = '';
+      staff.forEach(s => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td><b>${s.name}</b></td><td>${s.dept}</td><td style="color:#94a3b8;">${s.role}</td><td style="color:#10b981;">● ${s.status}</td>`;
+        b.appendChild(tr);
+      });
+    }
+    function addEmp() {
+      const n = document.getElementById('name').value.trim();
+      const d = document.getElementById('dept').value;
+      const r = document.getElementById('role').value.trim();
+      if (!n || !r) return;
+      staff.unshift({ name: n, dept: d, role: r, status: "Active" });
+      render();
+    }
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PulseCV - Interactive Resume Builder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
+    body { background:#09090b; color:#fff; min-height:100vh; padding:32px 20px; display:flex; justify-content:center; }
+    .container { width:100%; max-width:800px; display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+    .form-panel { background:#18181b; border:1px solid #27272a; border-radius:20px; padding:24px; }
+    .preview-panel { background:#fff; color:#0f172a; border-radius:20px; padding:28px; box-shadow:0 20px 40px rgba(0,0,0,0.5); font-size:13px; }
+    h2 { font-size:18px; margin-bottom:14px; color:#38bdf8; }
+    input, textarea { width:100%; background:#09090b; border:1px solid #3f3f46; border-radius:8px; padding:10px; color:#fff; font-size:12px; margin-bottom:10px; outline:none; }
+    .cv-name { font-size:24px; font-weight:800; color:#0f172a; margin-bottom:2px; }
+    .cv-role { font-size:14px; font-weight:700; color:#6366f1; margin-bottom:12px; }
+    .cv-section { margin-top:16px; border-top:1px solid #e2e8f0; padding-top:10px; }
+    .cv-heading { font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:1px; margin-bottom:6px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="form-panel">
+      <h2>Edit Details</h2>
+      <input type="text" id="in-name" value="Alex Mercer" oninput="updateCV()">
+      <input type="text" id="in-role" value="Lead Full-Stack AI Engineer" oninput="updateCV()">
+      <input type="text" id="in-email" value="alex@engineer.ai" oninput="updateCV()">
+      <textarea id="in-bio" rows="4" oninput="updateCV()">Specialist in autonomous agent architectures, scalable Python microservices, and Monaco IDE integrations.</textarea>
+      <input type="text" id="in-skills" value="Python, FastAPI, TypeScript, React, Docker, SQL" oninput="updateCV()">
+    </div>
+    <div class="preview-panel">
+      <div id="cv-name" class="cv-name">Alex Mercer</div>
+      <div id="cv-role" class="cv-role">Lead Full-Stack AI Engineer</div>
+      <div id="cv-email" style="color:#64748b; font-size:11px; margin-bottom:10px;">alex@engineer.ai</div>
+      <div class="cv-section">
+        <div class="cv-heading">Professional Profile</div>
+        <div id="cv-bio" style="line-height:1.5;">Specialist in autonomous agent architectures, scalable Python microservices, and Monaco IDE integrations.</div>
+      </div>
+      <div class="cv-section">
+        <div class="cv-heading">Core Technologies</div>
+        <div id="cv-skills" style="font-weight:600; color:#334155;">Python, FastAPI, TypeScript, React, Docker, SQL</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function updateCV() {
+      document.getElementById('cv-name').textContent = document.getElementById('in-name').value;
+      document.getElementById('cv-role').textContent = document.getElementById('in-role').value;
+      document.getElementById('cv-email').textContent = document.getElementById('in-email').value;
+      document.getElementById('cv-bio').textContent = document.getElementById('in-bio').value;
+      document.getElementById('cv-skills').textContent = document.getElementById('in-skills').value;
+    }
+  </script>
+</body>
+</html>

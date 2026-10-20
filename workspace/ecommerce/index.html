@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NovaStore - Modern E-Commerce</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
+    body { background:#09090b; color:#fff; min-height:100vh; padding:24px; }
+    .header { display:flex; justify-content:space-between; align-items:center; max-width:1000px; margin:0 auto 32px; border-bottom:1px solid #27272a; padding-bottom:16px; }
+    h1 { font-size:24px; color:#38bdf8; }
+    .cart-btn { background:#6366f1; border:none; padding:10px 20px; border-radius:12px; color:#fff; font-weight:700; cursor:pointer; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; max-width:1000px; margin:0 auto; }
+    .item-card { background:#18181b; border:1px solid #27272a; border-radius:20px; padding:20px; display:flex; flex-direction:column; justify-content:space-between; }
+    .item-img { font-size:48px; text-align:center; padding:20px; background:#09090b; border-radius:14px; margin-bottom:14px; }
+    .item-price { font-family:'JetBrains Mono',monospace; font-size:18px; color:#10b981; font-weight:700; margin:10px 0; }
+    .buy-btn { background:#3b82f6; border:none; padding:10px; border-radius:10px; color:#fff; font-weight:700; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🛍️ NovaStore Tech Catalog</h1>
+    <button class="cart-btn" onclick="alert('Cart total: ' + cartCount + ' items')">🛒 Cart: <span id="cart">0</span></button>
+  </div>
+  <div class="grid">
+    <div class="item-card">
+      <div class="item-img">💻</div>
+      <h3>M3 Ultra Workstation</h3>
+      <div class="item-price">$2,499</div>
+      <button class="buy-btn" onclick="addCart()">Add to Cart</button>
+    </div>
+    <div class="item-card">
+      <div class="item-img">🎧</div>
+      <h3>Spatial Audio Pro</h3>
+      <div class="item-price">$349</div>
+      <button class="buy-btn" onclick="addCart()">Add to Cart</button>
+    </div>
+    <div class="item-card">
+      <div class="item-img">⌨️</div>
+      <h3>CyberMechanical Keyboard</h3>
+      <div class="item-price">$189</div>
+      <button class="buy-btn" onclick="addCart()">Add to Cart</button>
+    </div>
+  </div>
+  <script>
+    let cartCount = 0;
+    function addCart() {
+      cartCount++;
+      document.getElementById('cart').textContent = cartCount;
+    }
+  </script>
+</body>
+</html>

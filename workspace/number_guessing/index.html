@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NumGuess - Number Guessing Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
+    body { background:#09090b; color:#fff; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+    .card { background:#18181b; border:1px solid #27272a; border-radius:24px; padding:32px; width:100%; max-width:420px; text-align:center; }
+    h1 { font-size:24px; color:#38bdf8; margin-bottom:12px; }
+    .input-row { display:flex; gap:8px; margin:20px 0; }
+    input { flex:1; background:#09090b; border:1px solid #3f3f46; border-radius:12px; padding:12px; color:#fff; font-size:16px; font-family:'JetBrains Mono',monospace; outline:none; text-align:center; }
+    button { background:#6366f1; border:none; padding:12px 20px; border-radius:12px; color:#fff; font-weight:700; cursor:pointer; }
+    .feedback { font-size:16px; font-weight:700; min-height:24px; margin-bottom:10px; }
+    .stats { font-size:13px; color:#94a3b8; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🎯 NumGuess Game</h1>
+    <p style="color:#94a3b8; font-size:13px;">Guess a secret number between 1 and 100</p>
+    <div class="input-row">
+      <input type="number" id="guess" min="1" max="100" placeholder="50">
+      <button onclick="checkGuess()">Guess</button>
+    </div>
+    <div id="msg" class="feedback">Make your first guess!</div>
+    <div class="stats">Attempts: <span id="tries">0</span></div>
+  </div>
+  <script>
+    let secret = Math.floor(Math.random() * 100) + 1;
+    let attempts = 0;
+    function checkGuess() {
+      const g = parseInt(document.getElementById('guess').value);
+      if (isNaN(g)) return;
+      attempts++;
+      document.getElementById('tries').textContent = attempts;
+      const m = document.getElementById('msg');
+      if (g === secret) {
+        m.textContent = `🎉 BINGO! You won in ${attempts} attempts!`;
+        m.style.color = '#10b981';
+      } else if (g < secret) {
+        m.textContent = "📈 Too Low! Try a higher number.";
+        m.style.color = '#38bdf8';
+      } else {
+        m.textContent = "📉 Too High! Try a lower number.";
+        m.style.color = '#f43f5e';
+      }
+    }
+  </script>
+</body>
+</html>

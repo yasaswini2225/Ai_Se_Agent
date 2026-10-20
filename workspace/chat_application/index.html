@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PulseChat - Live Team Chat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
+    body { background:#09090b; color:#fff; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+    .chat-container { background:#18181b; border:1px solid #27272a; border-radius:24px; width:100%; max-width:540px; height:600px; display:flex; flex-direction:column; overflow:hidden; }
+    .chat-header { padding:18px 24px; background:#1f1f23; border-bottom:1px solid #27272a; display:flex; justify-content:space-between; align-items:center; }
+    .stream { flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:14px; }
+    .bubble { max-width:75%; padding:12px 18px; border-radius:18px; font-size:13px; line-height:1.4; }
+    .bubble.me { background:#6366f1; color:#fff; align-self:flex-end; border-bottom-right-radius:4px; }
+    .bubble.peer { background:#27272a; color:#f1f5f9; align-self:flex-start; border-bottom-left-radius:4px; }
+    .author { font-size:10px; color:#818cf8; margin-bottom:4px; font-weight:700; }
+    .input-bar { display:flex; padding:14px; border-top:1px solid #27272a; gap:10px; }
+    input { flex:1; background:#09090b; border:1px solid #3f3f46; border-radius:12px; padding:12px; color:#fff; outline:none; font-size:13px; }
+    button { background:#6366f1; border:none; padding:12px 20px; border-radius:12px; color:#fff; font-weight:700; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">
+      <div>
+        <div style="font-weight:800; font-size:16px;"># engineering-general</div>
+        <div style="font-size:11px; color:#10b981;">● 42 Developers Online</div>
+      </div>
+    </div>
+    <div id="stream" class="stream">
+      <div class="bubble peer">
+        <div class="author">Alex (Architect)</div>
+        Just pushed the new multi-language execution engine to staging.
+      </div>
+      <div class="bubble peer">
+        <div class="author">Elena (AI Lead)</div>
+        Looks clean! Latencies are down below 50ms.
+      </div>
+    </div>
+    <form class="input-bar" onsubmit="post(event)">
+      <input type="text" id="mInp" placeholder="Send a message...">
+      <button type="submit">Post</button>
+    </form>
+  </div>
+  <script>
+    function post(e) {
+      e.preventDefault();
+      const inp = document.getElementById('mInp');
+      const val = inp.value.trim();
+      if (!val) return;
+      inp.value = '';
+      const stream = document.getElementById('stream');
+      const d = document.createElement('div');
+      d.className = 'bubble me';
+      d.textContent = val;
+      stream.appendChild(d);
+      stream.scrollTop = stream.scrollHeight;
+    }
+  </script>
+</body>
+</html>

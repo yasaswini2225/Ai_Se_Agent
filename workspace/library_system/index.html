@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BookVault - Library Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
+    body { background:#09090b; color:#fff; min-height:100vh; padding:32px 20px; }
+    .container { max-width:840px; margin:0 auto; }
+    h1 { font-size:26px; color:#38bdf8; margin-bottom:24px; }
+    .form-row { display:flex; gap:10px; margin-bottom:20px; }
+    input { background:#18181b; border:1px solid #3f3f46; border-radius:10px; padding:12px; color:#fff; font-size:13px; outline:none; flex:1; }
+    button.btn { background:#6366f1; border:none; border-radius:10px; padding:12px 24px; color:#fff; font-weight:700; cursor:pointer; }
+    table { width:100%; border-collapse:collapse; background:#18181b; border-radius:16px; overflow:hidden; border:1px solid #27272a; }
+    th, td { padding:14px 18px; text-align:left; font-size:13px; border-bottom:1px solid #27272a; }
+    th { background:#1f1f23; color:#94a3b8; font-size:11px; text-transform:uppercase; }
+    .badge { padding:3px 8px; border-radius:8px; font-size:11px; font-weight:700; }
+    .avail { background:rgba(16,185,129,0.2); color:#10b981; }
+    .borrowed { background:rgba(244,63,94,0.2); color:#f43f5e; }
+    .action-btn { background:#27272a; border:none; color:#cbd5e1; padding:6px 12px; border-radius:6px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📚 BookVault Library Management</h1>
+    <div class="form-row">
+      <input type="text" id="title" placeholder="Book Title...">
+      <input type="text" id="author" placeholder="Author...">
+      <button class="btn" onclick="addBook()">Add Book</button>
+    </div>
+    <table>
+      <thead><tr><th>Book Title</th><th>Author</th><th>Status</th><th>Toggle</th></tr></thead>
+      <tbody id="books"></tbody>
+    </table>
+  </div>
+  <script>
+    let books = [
+      { title: "Clean Code", author: "Robert C. Martin", available: true },
+      { title: "Design Patterns", author: "Gang of Four", available: false },
+      { title: "Introduction to Algorithms", author: "CLRS", available: true }
+    ];
+    function render() {
+      const b = document.getElementById('books');
+      b.innerHTML = '';
+      books.forEach((book, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><b>${book.title}</b></td>
+          <td style="color:#94a3b8;">${book.author}</td>
+          <td><span class="badge ${book.available?'avail':'borrowed'}">${book.available?'Available':'Borrowed'}</span></td>
+          <td><button class="action-btn" onclick="toggleBook(${i})">${book.available?'Borrow':'Return'}</button></td>
+        `;
+        b.appendChild(tr);
+      });
+    }
+    function addBook() {
+      const t = document.getElementById('title').value.trim();
+      const a = document.getElementById('author').value.trim();
+      if (!t || !a) return;
+      books.unshift({ title: t, author: a, available: true });
+      document.getElementById('title').value = '';
+      document.getElementById('author').value = '';
+      render();
+    }
+    function toggleBook(i) { books[i].available = !books[i].available; render(); }
+    render();
+  </script>
+</body>
+</html>

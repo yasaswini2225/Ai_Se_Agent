@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>KeyGate - Login & Registration Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
+    body { background:radial-gradient(circle at 50% 20%, #1e1b4b, #09090b); color:#fff; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+    .card { background:rgba(24,24,27,0.85); backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.1); border-radius:24px; padding:32px; width:100%; max-width:400px; box-shadow:0 25px 50px rgba(0,0,0,0.7); }
+    .tabs { display:flex; background:#09090b; border-radius:12px; padding:4px; margin-bottom:24px; }
+    .tab-btn { flex:1; background:transparent; border:none; padding:8px; border-radius:8px; color:#94a3b8; font-weight:700; font-size:13px; cursor:pointer; }
+    .tab-btn.active { background:#6366f1; color:#fff; }
+    .field { margin-bottom:16px; }
+    label { display:block; font-size:12px; font-weight:700; color:#94a3b8; margin-bottom:6px; }
+    input { width:100%; background:#09090b; border:1px solid #3f3f46; border-radius:10px; padding:12px; color:#fff; font-size:14px; outline:none; }
+    button.submit-btn { width:100%; background:linear-gradient(135deg,#6366f1,#4f46e5); border:none; padding:12px; border-radius:10px; color:#fff; font-weight:700; font-size:14px; cursor:pointer; margin-top:8px; }
+    .alert { padding:10px; border-radius:8px; font-size:12px; margin-top:14px; display:none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="tabs">
+      <button id="tab-login" class="tab-btn active" onclick="switchTab('login')">Sign In</button>
+      <button id="tab-register" class="tab-btn" onclick="switchTab('register')">Register</button>
+    </div>
+    <form id="auth-form" onsubmit="handleSubmit(event)">
+      <div id="reg-fields" style="display:none;" class="field">
+        <label>Full Name</label>
+        <input type="text" id="name" placeholder="John Doe">
+      </div>
+      <div class="field">
+        <label>Email Address</label>
+        <input type="email" id="email" placeholder="dev@pulse.ai" required>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="••••••••" required>
+      </div>
+      <button type="submit" id="submit-btn" class="submit-btn">Sign In</button>
+      <div id="alert-box" class="alert"></div>
+    </form>
+  </div>
+  <script>
+    let mode = 'login';
+    function switchTab(m) {
+      mode = m;
+      document.getElementById('tab-login').classList.toggle('active', mode==='login');
+      document.getElementById('tab-register').classList.toggle('active', mode==='register');
+      document.getElementById('reg-fields').style.display = mode==='register' ? 'block' : 'none';
+      document.getElementById('submit-btn').textContent = mode==='register' ? 'Create Account' : 'Sign In';
+      document.getElementById('alert-box').style.display = 'none';
+    }
+    function handleSubmit(e) {
+      e.preventDefault();
+      const a = document.getElementById('alert-box');
+      a.style.display = 'block';
+      a.style.background = 'rgba(16,185,129,0.2)';
+      a.style.color = '#10b981';
+      a.textContent = mode==='login' ? '✔ Successfully authenticated!' : '✔ Account registered successfully!';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PulseFX - Currency Converter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
+    body { background:#09090b; color:#fff; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+    .card { background:#18181b; border:1px solid #27272a; border-radius:24px; padding:32px; width:100%; max-width:440px; }
+    h1 { font-size:22px; color:#38bdf8; margin-bottom:20px; text-align:center; }
+    .field { margin-bottom:14px; }
+    input, select { width:100%; background:#09090b; border:1px solid #3f3f46; border-radius:10px; padding:12px; color:#fff; font-size:14px; outline:none; }
+    .res { background:#09090b; border-radius:12px; padding:16px; margin-top:20px; font-family:'JetBrains Mono',monospace; font-size:28px; color:#10b981; text-align:center; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>💱 PulseFX Currency Exchange</h1>
+    <div class="field"><input type="number" id="amt" value="100" oninput="calc()"></div>
+    <div class="field">
+      <select id="from" onchange="calc()">
+        <option value="USD">USD - US Dollar</option>
+        <option value="EUR">EUR - Euro</option>
+        <option value="GBP">GBP - British Pound</option>
+        <option value="JPY">JPY - Japanese Yen</option>
+      </select>
+    </div>
+    <div class="field">
+      <select id="to" onchange="calc()">
+        <option value="EUR">EUR - Euro</option>
+        <option value="USD">USD - US Dollar</option>
+        <option value="GBP">GBP - British Pound</option>
+        <option value="JPY">JPY - Japanese Yen</option>
+      </select>
+    </div>
+    <div class="res" id="out">92.00 EUR</div>
+  </div>
+  <script>
+    const fx = { USD: 1.0, EUR: 0.92, GBP: 0.79, JPY: 154.5 };
+    function calc() {
+      const a = parseFloat(document.getElementById('amt').value) || 0;
+      const f = document.getElementById('from').value;
+      const t = document.getElementById('to').value;
+      const inUSD = a / fx[f];
+      const res = inUSD * fx[t];
+      document.getElementById('out').textContent = `${res.toFixed(2)} ${t}`;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PulseNotes - Rich Notes App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
+    body { background:#09090b; color:#fff; min-height:100vh; padding:24px; display:flex; justify-content:center; }
+    .container { width:100%; max-width:720px; }
+    header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+    h1 { font-size:24px; font-weight:800; color:#38bdf8; }
+    .create-card { background:#18181b; border:1px solid #27272a; border-radius:16px; padding:20px; margin-bottom:24px; }
+    input, textarea { width:100%; background:#09090b; border:1px solid #3f3f46; border-radius:10px; padding:12px; color:#fff; font-size:13px; outline:none; margin-bottom:10px; }
+    textarea { height:90px; resize:vertical; }
+    button.save-btn { background:#6366f1; border:none; border-radius:10px; padding:10px 20px; color:#fff; font-weight:700; cursor:pointer; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; }
+    .note-card { background:#18181b; border:1px solid #27272a; border-radius:16px; padding:18px; display:flex; flex-direction:column; justify-content:space-between; min-height:140px; }
+    .note-title { font-weight:800; font-size:15px; color:#f1f5f9; margin-bottom:6px; }
+    .note-body { font-size:12px; color:#94a3b8; line-height:1.5; white-space:pre-wrap; }
+    .note-foot { display:flex; justify-content:space-between; align-items:center; margin-top:14px; font-size:10px; color:#64748b; }
+    .del { background:transparent; border:none; color:#f43f5e; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📝 PulseNotes</h1>
+      <input type="text" id="search" placeholder="Search notes..." oninput="render()" style="width:200px; margin:0;">
+    </header>
+    <div class="create-card">
+      <input type="text" id="title" placeholder="Note Title...">
+      <textarea id="body" placeholder="Write your note contents..."></textarea>
+      <button class="save-btn" onclick="addNote()">Save Note</button>
+    </div>
+    <div id="grid" class="grid"></div>
+  </div>
+  <script>
+    let notes = [
+      { title: "System Architecture", body: "Decouple microservices using Redis pub/sub queue.", date: "Today" },
+      { title: "Frontend Checklist", body: "Verify accessible colors, dark mode styling, and Monaco keyboard shortcuts.", date: "Yesterday" }
+    ];
+    function render() {
+      const q = document.getElementById('search').value.toLowerCase();
+      const grid = document.getElementById('grid');
+      grid.innerHTML = "";
+      notes.filter(n => n.title.toLowerCase().includes(q) || n.body.toLowerCase().includes(q)).forEach((n, i) => {
+        const div = document.createElement('div');
+        div.className = 'note-card';
+        div.innerHTML = `
+          <div>
+            <div class="note-title">${n.title}</div>
+            <div class="note-body">${n.body}</div>
+          </div>
+          <div class="note-foot">
+            <span>${n.date}</span>
+            <button class="del" onclick="delNote(${i})">Delete</button>
+          </div>
+        `;
+        grid.appendChild(div);
+      });
+    }
+    function addNote() {
+      const t = document.getElementById('title').value.trim();
+      const b = document.getElementById('body').value.trim();
+      if (!t || !b) return alert("Please provide title and content");
+      notes.unshift({ title: t, body: b, date: "Just now" });
+      document.getElementById('title').value = "";
+      document.getElementById('body').value = "";
+      render();
+    }
+    function delNote(i) { notes.splice(i, 1); render(); }
+    render();
+  </script>
+</body>
+</html>

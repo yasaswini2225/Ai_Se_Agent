@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PulseFit - BMI Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
+    body { background:#09090b; color:#fff; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+    .card { background:#18181b; border:1px solid #27272a; border-radius:24px; padding:32px; width:100%; max-width:400px; text-align:center; }
+    h1 { font-size:22px; color:#38bdf8; margin-bottom:20px; }
+    .input-grp { display:flex; gap:10px; margin-bottom:14px; }
+    input { width:100%; background:#09090b; border:1px solid #3f3f46; border-radius:10px; padding:12px; color:#fff; font-size:14px; outline:none; }
+    button { width:100%; background:#6366f1; border:none; padding:12px; border-radius:10px; color:#fff; font-weight:700; cursor:pointer; }
+    .bmi-val { font-family:'JetBrains Mono',monospace; font-size:42px; font-weight:800; color:#10b981; margin:20px 0 6px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>⚖️ BMI Calculator</h1>
+    <div class="input-grp">
+      <input type="number" id="w" placeholder="Weight (kg)" value="70">
+      <input type="number" id="h" placeholder="Height (cm)" value="175">
+    </div>
+    <button onclick="calcBMI()">Calculate</button>
+    <div id="val" class="bmi-val">22.9</div>
+    <div id="category" style="font-size:14px; color:#818cf8; font-weight:700;">Normal Weight</div>
+  </div>
+  <script>
+    function calcBMI() {
+      const w = parseFloat(document.getElementById('w').value);
+      const h = parseFloat(document.getElementById('h').value) / 100;
+      if (!w || !h) return;
+      const bmi = (w / (h * h)).toFixed(1);
+      document.getElementById('val').textContent = bmi;
+      let cat = "Normal Weight", col = "#10b981";
+      if (bmi < 18.5) { cat = "Underweight"; col = "#38bdf8"; }
+      else if (bmi >= 25 && bmi < 30) { cat = "Overweight"; col = "#f59e0b"; }
+      else if (bmi >= 30) { cat = "Obese"; col = "#ef4444"; }
+      document.getElementById('category').textContent = cat;
+      document.getElementById('category').style.color = col;
+    }
+  </script>
+</body>
+</html>

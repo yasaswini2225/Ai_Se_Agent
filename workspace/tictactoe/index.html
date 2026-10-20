@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CyberToe - Tic-Tac-Toe Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@800&family=JetBrains+Mono:wght@800&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
+    body { background:#09090b; color:#fff; min-height:100vh; display:flex; align-items:center; justify-content:center; }
+    .card { background:#18181b; border:1px solid #27272a; border-radius:24px; padding:32px; text-align:center; }
+    h1 { font-size:24px; color:#38bdf8; margin-bottom:16px; }
+    .grid { display:grid; grid-template-columns:repeat(3,90px); gap:10px; margin:20px auto; }
+    .cell { width:90px; height:90px; background:#09090b; border:1px solid #3f3f46; border-radius:14px; font-size:36px; font-weight:800; display:flex; align-items:center; justify-content:center; cursor:pointer; font-family:'JetBrains Mono',monospace; }
+    .cell.x { color:#38bdf8; }
+    .cell.o { color:#f43f5e; }
+    button.reset { background:#6366f1; border:none; padding:10px 24px; border-radius:10px; color:#fff; font-weight:700; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🎮 CyberToe</h1>
+    <div id="status" style="font-size:15px; color:#94a3b8;">Player X's Turn</div>
+    <div class="grid" id="board"></div>
+    <button class="reset" onclick="resetGame()">New Game</button>
+  </div>
+  <script>
+    let b = Array(9).fill(null);
+    let turn = 'X';
+    let won = false;
+    const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+    function render() {
+      const board = document.getElementById('board');
+      board.innerHTML = '';
+      b.forEach((v, i) => {
+        const c = document.createElement('div');
+        c.className = `cell ${v?v.toLowerCase():''}`;
+        c.textContent = v || '';
+        c.onclick = () => move(i);
+        board.appendChild(c);
+      });
+    }
+    function move(i) {
+      if (b[i] || won) return;
+      b[i] = turn;
+      checkWin();
+      if (!won) {
+        turn = turn === 'X' ? 'O' : 'X';
+        document.getElementById('status').textContent = `Player ${turn}'s Turn`;
+      }
+      render();
+    }
+    function checkWin() {
+      for (let [x,y,z] of wins) {
+        if (b[x] && b[x]===b[y] && b[x]===b[z]) {
+          won = true;
+          document.getElementById('status').textContent = `🎉 Player ${b[x]} Wins!`;
+          document.getElementById('status').style.color = '#10b981';
+          return;
+        }
+      }
+      if (!b.includes(null)) {
+        won = true;
+        document.getElementById('status').textContent = "🤝 It's a Draw!";
+      }
+    }
+    function resetGame() {
+      b = Array(9).fill(null);
+      turn = 'X';
+      won = false;
+      document.getElementById('status').textContent = "Player X's Turn";
+      document.getElementById('status').style.color = '#94a3b8';
+      render();
+    }
+    render();
+  </script>
+</body>
+</html>

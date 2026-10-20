@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChronoPulse - Precision Timer & Stopwatch</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans', sans-serif; }
+    body {
+      background: radial-gradient(circle at 50% 20%, #1e1b4b 0%, #09090b 100%);
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .timer-card {
+      background: rgba(18, 18, 24, 0.85);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      border-radius: 24px;
+      padding: 32px;
+      width: 100%;
+      max-width: 460px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(99, 102, 241, 0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+    .header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header h1 {
+      font-size: 20px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #a5b4fc 0%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+    .mode-pills {
+      display: flex;
+      background: #181824;
+      border: 1px solid #272738;
+      border-radius: 12px;
+      padding: 3px;
+    }
+    .mode-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      padding: 6px 14px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mode-btn.active {
+      background: #6366f1;
+      color: #ffffff;
+      box-shadow: 0 2px 10px rgba(99, 102, 241, 0.4);
+    }
+    /* Circular Progress Display */
+    .dial-wrapper {
+      position: relative;
+      width: 240px;
+      height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .dial-svg {
+      transform: rotate(-90deg);
+      width: 240px;
+      height: 240px;
+    }
+    .dial-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.05);
+      stroke-width: 8;
+    }
+    .dial-progress {
+      fill: none;
+      stroke: #38bdf8;
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 691;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 0.1s linear, stroke 0.3s;
+    }
+    .time-readout {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .digits {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 44px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -1px;
+    }
+    .status-text {
+      font-size: 11px;
+      font-weight: 700;
+      color: #818cf8;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-top: 4px;
+    }
+    /* Preset Buttons for Quick Timer */
+    .presets {
+      display: flex;
+      gap: 8px;
+    }
+    .preset-btn {
+      background: #1e1e2d;
+      border: 1px solid #313147;
+      color: #cbd5e1;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .preset-btn:hover {
+      background: #2b2b3f;
+      color: #ffffff;
+    }
+    /* Action Buttons */
+    .actions {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+    }
+    .btn {
+      flex: 1;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+    }
+    .btn-secondary {
+      background: #272738;
+      color: #cbd5e1;
+    }
+    .btn-secondary:hover {
+      background: #33334a;
+      color: white;
+    }
+    /* Laps area */
+    .laps-container {
+      width: 100%;
+      max-height: 120px;
+      overflow-y: auto;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .lap-item {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #94a3b8;
+      padding: 4px 8px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="timer-card">
+    <div class="header">
+      <h1>⚡ CHRONO PULSE</h1>
+      <div class="mode-pills">
+        <button id="mode-timer" class="mode-btn active" onclick="switchMode('timer')">Timer</button>
+        <button id="mode-stopwatch" class="mode-btn" onclick="switchMode('stopwatch')">Stopwatch</button>
+      </div>
+    </div>
+
+    <!-- Radial Dial -->
+    <div class="dial-wrapper">
+      <svg class="dial-svg" viewBox="0 0 240 240">
+        <circle class="dial-bg" cx="120" cy="120" r="110" />
+        <circle id="progress-circle" class="dial-progress" cx="120" cy="120" r="110" />
+      </svg>
+      <div class="time-readout">
+        <div id="display-time" class="digits">05:00</div>
+        <div id="status-label" class="status-text">Ready</div>
+      </div>
+    </div>
+
+    <!-- Timer Presets -->
+    <div id="presets-row" class="presets">
+      <button class="preset-btn" onclick="setTimerPreset(60)">1 min</button>
+      <button class="preset-btn" onclick="setTimerPreset(300)">5 min</button>
+      <button class="preset-btn" onclick="setTimerPreset(1500)">25m Pomodoro</button>
+      <button class="preset-btn" onclick="setTimerPreset(3600)">1 hr</button>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button id="btn-start" class="btn btn-primary" onclick="toggleStart()">Start</button>
+      <button id="btn-lap" class="btn btn-secondary" onclick="handleSecondaryAction()">Reset</button>
+    </div>
+
+    <!-- Laps Log -->
+    <div id="laps-box" class="laps-container" style="display: none;"></div>
+  </div>
+
+  <script>
+    const CIRCUMFERENCE = 2 * Math.PI * 110;
+    let mode = 'timer'; // 'timer' | 'stopwatch'
+    let isRunning = false;
+    let interval = null;
+
+    // Timer variables
+    let timerTotalSeconds = 300;
+    let timerRemainingSeconds = 300;
+
+    // Stopwatch variables
+    let swStartTime = 0;
+    let swElapsedTime = 0;
+    let laps = [];
+
+    const display = document.getElementById('display-time');
+    const statusLabel = document.getElementById('status-label');
+    const progressCircle = document.getElementById('progress-circle');
+    const btnStart = document.getElementById('btn-start');
+    const btnSecondary = document.getElementById('btn-lap');
+    const presetsRow = document.getElementById('presets-row');
+    const lapsBox = document.getElementById('laps-box');
+
+    // Web Audio Chime synthesizer for timer finish
+    function playChime() {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.15); // A5
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.2);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 1.2);
+      } catch (e) {}
+    }
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function formatMs(ms) {
+      const m = Math.floor(ms / 60000);
+      const s = Math.floor((ms % 60000) / 1000);
+      const msPart = Math.floor((ms % 1000) / 10);
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}.${String(msPart).padStart(2, '0')}`;
+    }
+
+    function updateProgress(fraction) {
+      const offset = CIRCUMFERENCE * (1 - Math.max(0, Math.min(1, fraction)));
+      progressCircle.style.strokeDashoffset = offset;
+    }
+
+    function switchMode(newMode) {
+      if (isRunning) toggleStart();
+      mode = newMode;
+      document.getElementById('mode-timer').classList.toggle('active', mode === 'timer');
+      document.getElementById('mode-stopwatch').classList.toggle('active', mode === 'stopwatch');
+
+      if (mode === 'timer') {
+        presetsRow.style.display = 'flex';
+        lapsBox.style.display = 'none';
+        btnSecondary.textContent = 'Reset';
+        display.textContent = formatTime(timerRemainingSeconds);
+        statusLabel.textContent = 'Timer Ready';
+        progressCircle.style.stroke = '#38bdf8';
+        updateProgress(timerRemainingSeconds / timerTotalSeconds);
+      } else {
+        presetsRow.style.display = 'none';
+        lapsBox.style.display = 'flex';
+        btnSecondary.textContent = isRunning ? 'Lap' : 'Reset';
+        display.textContent = formatMs(swElapsedTime);
+        statusLabel.textContent = 'Stopwatch Ready';
+        progressCircle.style.stroke = '#818cf8';
+        updateProgress(1);
+      }
+    }
+
+    function setTimerPreset(sec) {
+      if (isRunning) toggleStart();
+      timerTotalSeconds = sec;
+      timerRemainingSeconds = sec;
+      display.textContent = formatTime(sec);
+      statusLabel.textContent = 'Timer Ready';
+      updateProgress(1);
+    }
+
+    function toggleStart() {
+      if (isRunning) {
+        // Pause
+        clearInterval(interval);
+        isRunning = false;
+        btnStart.textContent = 'Resume';
+        btnStart.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+        statusLabel.textContent = 'Paused';
+        if (mode === 'stopwatch') btnSecondary.textContent = 'Reset';
+      } else {
+        // Start
+        isRunning = true;
+        btnStart.textContent = 'Pause';
+        btnStart.style.background = 'linear-gradient(135deg, #f43f5e 0%, #e11d48 100%)';
+        statusLabel.textContent = 'Running';
+
+        if (mode === 'timer') {
+          interval = setInterval(() => {
+            timerRemainingSeconds--;
+            display.textContent = formatTime(timerRemainingSeconds);
+            updateProgress(timerRemainingSeconds / timerTotalSeconds);
+
+            if (timerRemainingSeconds <= 0) {
+              clearInterval(interval);
+              isRunning = false;
+              btnStart.textContent = 'Start';
+              btnStart.style.background = 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)';
+              statusLabel.textContent = 'TIME EXPIRED!';
+              playChime();
+              alert('⏰ Timer finished!');
+            }
+          }, 1000);
+        } else {
+          btnSecondary.textContent = 'Lap';
+          swStartTime = Date.now() - swElapsedTime;
+          interval = setInterval(() => {
+            swElapsedTime = Date.now() - swStartTime;
+            display.textContent = formatMs(swElapsedTime);
+          }, 25);
+        }
+      }
+    }
+
+    function handleSecondaryAction() {
+      if (mode === 'timer') {
+        if (isRunning) toggleStart();
+        timerRemainingSeconds = timerTotalSeconds;
+        display.textContent = formatTime(timerRemainingSeconds);
+        statusLabel.textContent = 'Reset';
+        btnStart.textContent = 'Start';
+        btnStart.style.background = 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)';
+        updateProgress(1);
+      } else {
+        if (isRunning) {
+          // Record Lap
+          const lapTime = formatMs(swElapsedTime);
+          laps.unshift(`Lap ${laps.length + 1}: ${lapTime}`);
+          renderLaps();
+        } else {
+          // Reset Stopwatch
+          swElapsedTime = 0;
+          laps = [];
+          display.textContent = '00:00.00';
+          statusLabel.textContent = 'Ready';
+          btnStart.textContent = 'Start';
+          renderLaps();
+        }
+      }
+    }
+
+    function renderLaps() {
+      lapsBox.innerHTML = '';
+      laps.forEach(lap => {
+        const item = document.createElement('div');
+        item.className = 'lap-item';
+        item.textContent = lap;
+        lapsBox.appendChild(item);
+      });
+    }
+
+    // Init
+    switchMode('timer');
+  </script>
+</body>
+</html>

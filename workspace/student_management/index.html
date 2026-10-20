@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EduTrack - Student Management System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
+    body { background:#09090b; color:#f1f5f9; min-height:100vh; padding:32px 20px; }
+    .container { max-width:960px; margin:0 auto; }
+    header { display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; }
+    h1 { font-size:26px; font-weight:800; background:linear-gradient(135deg,#60a5fa,#a78bfa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; }
+    .stat-card { background:#18181b; border:1px solid #27272a; border-radius:16px; padding:20px; }
+    .stat-num { font-size:28px; font-weight:800; color:#38bdf8; margin-top:4px; font-family:'JetBrains Mono',monospace; }
+    .form-card { background:#18181b; border:1px solid #27272a; border-radius:16px; padding:24px; margin-bottom:24px; }
+    .input-grid { display:grid; grid-template-columns:repeat(4,1fr) auto; gap:12px; }
+    input, select { background:#09090b; border:1px solid #3f3f46; border-radius:10px; padding:12px; color:#fff; font-size:13px; outline:none; }
+    button.add-btn { background:#6366f1; border:none; border-radius:10px; padding:12px 24px; color:#fff; font-weight:700; cursor:pointer; }
+    table { width:100%; border-collapse:collapse; background:#18181b; border-radius:16px; overflow:hidden; border:1px solid #27272a; }
+    th, td { padding:14px 18px; text-align:left; font-size:13px; border-bottom:1px solid #27272a; }
+    th { background:#1f1f23; color:#94a3b8; font-size:11px; text-transform:uppercase; letter-spacing:1px; }
+    .badge { display:inline-block; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700; }
+    .badge-a { background:rgba(16,185,129,0.2); color:#10b981; }
+    .badge-b { background:rgba(56,189,248,0.2); color:#38bdf8; }
+    .del-btn { background:rgba(244,63,94,0.15); border:none; color:#f43f5e; padding:6px 12px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>🎓 EduTrack System</h1>
+        <p style="color:#64748b; font-size:13px; margin-top:4px;">Comprehensive Student Information & GPA Registry</p>
+      </div>
+      <input type="text" id="search" placeholder="Search student..." oninput="render()" style="width:240px;">
+    </header>
+
+    <div class="stats">
+      <div class="stat-card"><div>Total Enrolled</div><div id="total-count" class="stat-num">0</div></div>
+      <div class="stat-card"><div>Average GPA</div><div id="avg-gpa" class="stat-num">0.0</div></div>
+      <div class="stat-card"><div>Top Department</div><div class="stat-num" style="font-size:22px; color:#a78bfa;">CS & AI</div></div>
+    </div>
+
+    <div class="form-card">
+      <div class="input-grid">
+        <input type="text" id="name" placeholder="Student Name">
+        <input type="text" id="id" placeholder="Student ID (e.g. CS-204)">
+        <select id="course">
+          <option>Computer Science</option><option>Data Science</option><option>Software Eng</option><option>Cybersecurity</option>
+        </select>
+        <input type="number" id="gpa" placeholder="GPA (0.0 - 4.0)" step="0.1" min="0" max="4">
+        <button class="add-btn" onclick="addStudent()">Add Student</button>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Student Name</th><th>Course</th><th>GPA</th><th>Status</th><th>Action</th></tr>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+  <script>
+    let students = [
+      { id: "CS-101", name: "Alex Mercer", course: "Computer Science", gpa: 3.9 },
+      { id: "SE-104", name: "Samantha Reed", course: "Software Eng", gpa: 3.8 },
+      { id: "DS-202", name: "David Kim", course: "Data Science", gpa: 3.5 }
+    ];
+    function render() {
+      const q = document.getElementById('search').value.toLowerCase();
+      const filtered = students.filter(s => s.name.toLowerCase().includes(q) || s.id.toLowerCase().includes(q));
+      const tbody = document.getElementById('table-body');
+      tbody.innerHTML = "";
+      filtered.forEach((s, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="font-family:'JetBrains Mono'; color:#38bdf8;">${s.id}</td>
+          <td><b>${s.name}</b></td>
+          <td>${s.course}</td>
+          <td style="font-family:'JetBrains Mono'; font-weight:700;">${s.gpa}</td>
+          <td><span class="badge ${s.gpa >= 3.6 ? 'badge-a' : 'badge-b'}">${s.gpa >= 3.6 ? 'Honor Roll' : 'In Good Standing'}</span></td>
+          <td><button class="del-btn" onclick="delStudent(${i})">Remove</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+      document.getElementById('total-count').textContent = students.length;
+      const avg = students.length ? (students.reduce((a,c)=>a+parseFloat(c.gpa),0)/students.length).toFixed(2) : "0.0";
+      document.getElementById('avg-gpa').textContent = avg;
+    }
+    function addStudent() {
+      const name = document.getElementById('name').value.trim();
+      const id = document.getElementById('id').value.trim();
+      const course = document.getElementById('course').value;
+      const gpa = parseFloat(document.getElementById('gpa').value) || 3.0;
+      if (!name || !id) return alert("Fill Name and ID");
+      students.unshift({ id, name, course, gpa });
+      document.getElementById('name').value = '';
+      document.getElementById('id').value = '';
+      document.getElementById('gpa').value = '';
+      render();
+    }
+    function delStudent(idx) { students.splice(idx,1); render(); }
+    render();
+  </script>
+</body>
+</html>

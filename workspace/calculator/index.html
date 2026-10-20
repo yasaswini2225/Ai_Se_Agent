@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quantum Scientific Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
+    body { background:#09090b; color:#fff; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+    .calc { background:#18181b; border:1px solid #27272a; border-radius:24px; padding:28px; width:100%; max-width:360px; box-shadow:0 25px 50px rgba(0,0,0,0.7); }
+    .screen { background:#09090b; border:1px solid #27272a; border-radius:14px; padding:18px; text-align:right; margin-bottom:20px; min-height:90px; display:flex; flex-direction:column; justify-content:space-between; }
+    .history { font-family:'JetBrains Mono',monospace; font-size:13px; color:#71717a; min-height:18px; }
+    .display { font-family:'JetBrains Mono',monospace; font-size:36px; font-weight:700; color:#38bdf8; word-break:break-all; }
+    .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+    button { background:#27272a; border:none; border-radius:12px; padding:16px; font-size:18px; font-weight:700; color:#e4e4e7; cursor:pointer; transition:0.15s; }
+    button:hover { background:#3f3f46; transform:scale(1.03); }
+    button.op { background:#3b82f6; color:#fff; }
+    button.op:hover { background:#2563eb; }
+    button.special { background:#ef4444; color:#fff; }
+    button.eq { background:#10b981; grid-column:span 2; }
+  </style>
+</head>
+<body>
+  <div class="calc">
+    <div class="screen">
+      <div id="hist" class="history"></div>
+      <div id="disp" class="display">0</div>
+    </div>
+    <div class="grid">
+      <button class="special" onclick="clr()">C</button>
+      <button onclick="add('(')">(</button>
+      <button onclick="add(')')">)</button>
+      <button class="op" onclick="add('/')">÷</button>
+      <button onclick="add('7')">7</button>
+      <button onclick="add('8')">8</button>
+      <button onclick="add('9')">9</button>
+      <button class="op" onclick="add('*')">×</button>
+      <button onclick="add('4')">4</button>
+      <button onclick="add('5')">5</button>
+      <button onclick="add('6')">6</button>
+      <button class="op" onclick="add('-')">-</button>
+      <button onclick="add('1')">1</button>
+      <button onclick="add('2')">2</button>
+      <button onclick="add('3')">3</button>
+      <button class="op" onclick="add('+')">+</button>
+      <button onclick="add('0')">0</button>
+      <button onclick="add('.')">.</button>
+      <button class="eq" onclick="calc()">=</button>
+    </div>
+  </div>
+  <script>
+    let expr = "";
+    const d = document.getElementById('disp'), h = document.getElementById('hist');
+    function add(c) { if(expr==="0" && c!==".") expr=""; expr+=c; d.textContent=expr; }
+    function clr() { expr=""; d.textContent="0"; h.textContent=""; }
+    function calc() {
+      try {
+        const s = expr.replace(/×/g,'*').replace(/÷/g,'/');
+        const res = Function(`'use strict'; return (${s})`)();
+        h.textContent = expr + " =";
+        expr = String(res);
+        d.textContent = expr;
+      } catch(e) { d.textContent="Error"; expr=""; }
+    }
+  </script>
+</body>
+</html>
